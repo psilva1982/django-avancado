@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>{{ object.first_name }} {{ object.last_name }}</h1>
+<p>Idade: {{ object.age }}</p>
+<p>Salario: {{ object.salary }}</p>
+<p>Bio: {{ object.bio }}</p>
+<p>{{ now }}</p>
+
+<a href="{% url 'person_update_cbv' object.id %}">
+    Atualizar
+</a>
+
+<a href="{% url 'person_delete_cbv' object.id %}">
+    Excluir
+</a
+
+</body>
+</html>

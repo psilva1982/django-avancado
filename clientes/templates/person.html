@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% load filters %}
+{% load my_tags %}
+
+{% block title %} Administracao {% endblock %}
+
+{% block main %}
+
+    <div class="row">
+        <div class="col-12">
+            <form action="" method="get" class="form-inline">
+
+                <div class="form-group col-sm-10">
+                    <input class="form-control" type="text" name="nome" id="nome" placeholder="Nome">
+                    <input class="form-control" type="text" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
+                </div>
+
+                <button class="btn btn-primary" type="submit">Pesquisar</button>
+
+            </form>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col">
+
+        </div>
+
+        <div class="col-6">
+            <h3>Listagem de clientes</h3>
+            <ul class="list-group">
+
+                {% for person in persons %}
+                    <li class="list-group-item">
+                        <a href="{% url 'persons_update' person.id %}">{{ person.nome_completo }}</a>
+                        <a href="{% url 'persons_delete' person.id %}" class="trash-item">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </li>
+
+                <!-- Filter empty -->
+                {% empty %}
+                    <li>Desculpe não tenho pessoas cadastradas</li>
+
+                {% endfor %}
+            </ul>
+
+            <br>
+
+            <a href="{% url 'person_new' %}" class="btn btn-primary"> Novo cliente</a>
+
+        </div>
+
+        <div class="col">
+            {% if user.is_authenticated %}
+                <p>Ola {{user.username }}
+                    <a href="{% url 'logout' %}">
+                        <span class="badge badge-dark">Sair</span>
+                    </a>
+                </p>
+
+            {% endif %}
+        </div>
+    </div>
+<br>
+
+<!--
+Filters-Guide
+https://docs.djangoproject.com/pt-br/2.1/ref/templates/builtins/
+-->
+
+{% if persons|length > 2 %}
+    <p>Tem muitos registros hoje</p>
+
+{% endif %}
+
+<!-- Filters - UpperCase -->
+{% filter force_escape|upper %}
+    Está é uma mensagem que aparecerá com letras maiúsculas
+{% endfilter %}
+
+<!-- Filters - LowerCase -->
+{% filter force_escape|lower %}
+    Está é uma mensagem que aparecerá com letras maiúsculas
+{% endfilter %}
+
+<!-- Data/Hora atual -->
+{% now "d F Y H:i" %}
+
+<p> {{ footer_message|my_filter }} </p>
+<p> {{ 12345.213|arredonda:2 }} </p>
+
+
+
+{% endblock %}
+
+
+
+{% block footer %}
+
+    <!-- o arquivo incluído tem acesso ao contexto -->
+    {% include 'footer.html' with minha_var=footer_message %}
+{% endblock %}

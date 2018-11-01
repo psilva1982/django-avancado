@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Exclui</h1>
+<form method="post">{% csrf_token %}
+    <p>Deseja excluir "{{ object }}"?</p>
+    <input type="submit" value="Confirm">
+</form>
+
+</body>
+</html>

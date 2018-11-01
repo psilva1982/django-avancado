@@ -1,0 +1,22 @@
+{% load my_tags %}
+
+{% for person in persons %}
+    <!--
+    <li class="list-group-item">
+        {{ person.first_name }}
+    </li>
+    -->
+{% endfor %}
+
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">{{ minha_var }}
+
+            <!-- Template Tag personalizada criada pelo usuário -->
+            {% current_time "%d / %m / %Y - %I:%M"  as the_time %}
+            {{ the_time }}
+
+        </span>
+    </div>
+</footer>
