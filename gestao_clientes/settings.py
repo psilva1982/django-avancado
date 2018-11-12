@@ -29,19 +29,35 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['gestao-clientes2.herokuapp.com', 'localhost']
 
+INTERNAL_IPS = ['127.0.0.1']
+
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrapform',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+
     'clientes',
+    'produtos',
+    'vendas',
     'home',
+
+    'debug_toolbar'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,6 +67,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'mymiddlewares.MetaData.MetaData',
+
 ]
 
 ROOT_URLCONF = 'gestao_clientes.urls'
@@ -66,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -73,26 +93,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestao_clientes.wsgi.application'
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 DATABASES = {
-    'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+     'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
 }
 
 # Acesso PostgreSQLbb
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'gestao_clientes',
-#        'USER': 'postgres',
-#        'PASSWORD': 'postgres',
-#        'HOST': '192.168.0.15',
-#        'PORT': '5432',
-#    }
-#}
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'gestao_clientes',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': '192.168.0.15',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -146,6 +174,21 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = '/static/'
+
+# ADMINS CADASTRADOS PARA RECEBER E-MAILS
+# Pode ser inseridos tantos que quiser
+# utiliza a função mail_admins()
+#ADMINS = [('admin', 'admin@aemail.com'),
+#         ('admin2', 'admin2@email.com')]
+#SERVER_MAIL = 'sistema@empresa.com.br'
+
+# Configurações para o envio de e-mails - Utilizando o mailgun
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@sandbox1d93f7aa880d44889b72578267c4477c.mailgun.org'
+EMAIL_HOST_PASSWORD = 'a77f3b75a6bada9ca50905bd970d9377'
+EMAIL_USE_TLS = True
+
 
 # AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')

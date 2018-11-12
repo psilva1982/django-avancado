@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth import logout
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
@@ -28,7 +28,19 @@ def my_logout(request):
 
 class MyView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'home3.html')
+
+        # Trabalhando com cookies
+        response = render_to_response('home3.html')
+
+        # Setando um cookie
+        response.set_cookie('cor', 'azul', max_age=1000)    # max_age - cookie expira em 1000 segundos
+
+        # Lendo um cookie
+        meu_cookie = request.COOKIES.get('cor')
+        print('>>>> ' +meu_cookie)
+
+        return response
+
 
     def post(self, request, *args, **kwargs):
         return HttpResponse('retornando do post')

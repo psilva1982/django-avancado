@@ -5,6 +5,12 @@
     <title>Title</title>
 </head>
 <body>
+<!-- Mensagem recuperada por sessão -->
+<p>{{ mensagem }} </p>
+<br>
+    <!-- Mensagem processada através de middleware -->
+    <p>{{ mensagem2 }} </p>
+<br>
 Listagem de pessoas
 <ul>
     {% for person in object_list %}

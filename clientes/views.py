@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,9 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
 
 from .models import Person
-from .models import Produto
+from produtos.models import Produto
+from vendas.models import Venda
+
 from .forms import PersonForm
 
 
@@ -39,6 +42,13 @@ def persons_list(request):
 
 @login_required
 def persons_new(request):
+
+    # Verificando se o usuário possui permissão para adicionar novo cliente
+    if not request.user.has_perm('clientes.add_person'):
+        return HttpResponse('não autorizado')
+    elif not request.user.is_superuser:
+        return HttpResponse('Não é superusuário')
+
     form = PersonForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -49,6 +59,7 @@ def persons_new(request):
 
 @login_required
 def persons_update(request, id):
+
     person = get_object_or_404(Person, pk=id)
     form = PersonForm(request.POST or None, request.FILES or None, instance=person)
 
@@ -69,8 +80,8 @@ def persons_delete(request, id):
 
     return render(request, 'person_delete_confirm.html', {'person': person})
 
-
-class PersonList(ListView):
+#Mixin deve ser o primeiro a esquerda
+class PersonList(LoginRequiredMixin, ListView):
     model = Person
 
     '''
@@ -83,24 +94,55 @@ class PersonList(ListView):
     é person_list.html
     '''
 
+    # Trabalhando com Sessões
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Setando uma variável na sessão
+        primeiro_acesso = self.request.session.get('primeiro_acesso', False)    # Se não existir passa False
+
+        if not primeiro_acesso:
+            context['mensagem'] = 'Seja bem vindo ao seu primeiro acesso hoje'
+            self.request.session['primeiro_acesso'] = True
+
+        else:
+            context['mensagem'] = 'Seja bem vindo ao sistema'
+
+        return context
+
 '''
 Igual a anterior acima, também é possível injetar o contexto
 '''
-class PersonDetail(DetailView):
+class PersonDetail(LoginRequiredMixin, DetailView):
     model = Person
 
     '''É possível injetar contexto'''
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['now'] = timezone.now()
+    #     return context
+
+    # Método herdado subscrito para utilizar o select_related
+    def get_object(self, queryset=None):
+         pk = self.kwargs.get(self.pk_url_kwarg)
+         return Person.objects.select_related('doc').get(id=pk)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
+        context['vendas'] = Venda.objects.filter(
+            pessoa=self.object.id
+        )
         return context
 
-class PersonCreate(CreateView):
+
+class PersonCreate(LoginRequiredMixin, CreateView):
     model = Person
     fields = ['first_name', 'last_name', 'age', 'salary', 'bio', 'photo']
     success_url = reverse_lazy('person_list_cbv')
 
-class PersonUpdate(UpdateView):
+class PersonUpdate(LoginRequiredMixin, UpdateView):
     model = Person
 
     # Caso não fosse específicado o template que executaria
@@ -110,7 +152,8 @@ class PersonUpdate(UpdateView):
     success_url = reverse_lazy('person_list_cbv')
 
 
-class PersonDelete(DeleteView):
+class PersonDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = ('clientes.deletar_cliente',)
 
     model = Person
 

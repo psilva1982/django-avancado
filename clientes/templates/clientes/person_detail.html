@@ -9,16 +9,22 @@
 <h1>{{ object.first_name }} {{ object.last_name }}</h1>
 <p>Idade: {{ object.age }}</p>
 <p>Salario: {{ object.salary }}</p>
-<p>Bio: {{ object.bio }}</p>
+<p>Documento: {{ object.doc }}</p>
 <p>{{ now }}</p>
 
-<a href="{% url 'person_update_cbv' object.id %}">
-    Atualizar
-</a>
+<h2>Vendas</h2>
+{% for venda in vendas %}
+<p>Venda id: {{ venda.id }}</p>
+<h3>Lista de produtos</h3>
+<ul>
+    {% for produto in venda.produtos.all %}
+    <li>{{ produto.id }} - {{ produto.descricao }} </li>
+    {% endfor %}
+</ul>
+{% endfor %}
 
-<a href="{% url 'person_delete_cbv' object.id %}">
-    Excluir
-</a
+<a href="{% url 'person_update_cbv' object.id %}"> Atualizar </a>
+<a href="{% url 'person_delete_cbv' object.id %}"> Excluir </a>
 
 </body>
 </html>
