@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['gestao-clientes2.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['django-avancado.herokuapp.com', 'localhost']
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -183,10 +183,10 @@ STATIC_URL = '/static/'
 #SERVER_MAIL = 'sistema@empresa.com.br'
 
 # Configurações para o envio de e-mails - Utilizando o mailgun
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'postmaster@sandbox1d93f7aa880d44889b72578267c4477c.mailgun.org'
-EMAIL_HOST_PASSWORD = 'a77f3b75a6bada9ca50905bd970d9377'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 
