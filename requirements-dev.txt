@@ -22,3 +22,4 @@ static3==0.7.0
 typed-ast==1.1.0
 urllib3==1.24
 wrapt==1.10.11
+django-allauth
