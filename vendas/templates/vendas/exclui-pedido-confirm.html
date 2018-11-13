@@ -1,0 +1,6 @@
+<h2>Tem certeza que quer excluir o pedido: {{ venda }}</h2>
+
+<form action="{% url 'exclui-pedido' venda.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Confirmar</button>
+</form>

@@ -25,6 +25,9 @@ class Venda(models.Model):
             ('ver_dashboard', 'Pode visualizar o dashboard'),
             ('permissao3', 'Permissão 3'),
         )
+    
+    def get_raw_vendas(self):
+        return Venda.objects.raw('select * from vendas_venda where id = %s', ['7', ])
 
     def get_total(self):
         tot = self.itempedido_set.all().aggregate(

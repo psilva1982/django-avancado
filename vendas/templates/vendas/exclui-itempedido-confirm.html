@@ -1,0 +1,6 @@
+<h2>Tem certeza que quer excluir o item: {{ item }}</h2>
+
+<form action="{% url 'exclui-item-pedido' item.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Confirmar</button>
+</form>
