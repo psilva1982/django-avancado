@@ -42,8 +42,8 @@ class Person(models.Model):
         send_mail(
             'Novo cliente cadastrado',
             texto_puro,
-            'postmaster@sandbox1d93f7aa880d44889b72578267c4477c.mailgun.org',
-            ['severos1982@gmail.com'],
+            'xxxx@email.com',
+            ['xxxx@email.com'],
             html_message=email_html,
             fail_silently=False,
         )
